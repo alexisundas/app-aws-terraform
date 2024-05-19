@@ -19,16 +19,16 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           
-      - name: Ensure gradlew is executable
-        run: chmod +x ./gradlew
+      - name: Install Gradle
+        run: sudo apt-get update && sudo apt-get install -y gradle
       
       - name: Build backend
         working-directory: ./java-app/backend
-        run: ../../gradlew build
+        run: gradle build
       
       - name: Build frontend
         working-directory: ./java-app/frontend
-        run: ../../gradlew build
+        run: gradle build
         
       - name: Set up Docker Build
         uses: docker/setup-buildx-action@v3
