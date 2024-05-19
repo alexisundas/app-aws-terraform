@@ -1,0 +1,3 @@
+FROM openjdk:11-jre-slim
+COPY ../java-app/frontend/build/libs/frontend-0.0.1-SNAPSHOT.jar frontend.jar
+ENTRYPOINT ["java", "-jar", "/frontend.jar"]
