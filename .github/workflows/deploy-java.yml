@@ -19,16 +19,18 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           
-      - name: Install Gradle
-        run: sudo sdk install gradle
-      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+      - name: Build with Gradle
+        run: ./gradlew build
+        
       - name: Build backend
         working-directory: ./java-app/backend
-        run: gradle build
+        run: ./gradlew
       
       - name: Build frontend
         working-directory: ./java-app/frontend
-        run: gradle build
+        run: ./gradlew
         
       - name: Set up Docker Build
         uses: docker/setup-buildx-action@v3
