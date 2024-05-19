@@ -20,7 +20,7 @@ jobs:
           distribution: 'adopt'
           
       - name: Install Gradle
-        run: sudo apt-get update && sudo apt-get install -y gradle
+        run: sudo sdk install gradle
       
       - name: Build backend
         working-directory: ./java-app/backend
