@@ -1,3 +1,6 @@
+variable "private_key_path" {
+  default = ""
+}
 resource "aws_instance" "jenkins" {
   ami           = var.ami
   instance_type = var.instance_type
@@ -21,7 +24,6 @@ resource "aws_instance" "jenkins" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file(var.private_key_path)
       host        = self.public_ip
     }
   }

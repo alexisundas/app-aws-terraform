@@ -18,6 +18,3 @@ variable "instance_name" {
   description = "Name tag for the instance"
 }
 
-variable "private_key_path" {
-  description = "Path to the private key file for SSH access"
-}
