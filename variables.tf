@@ -14,13 +14,4 @@ variable "aws_region" {
   default = "eu-central-1"
 }
 
-variable "vpc_cidr" {
-  description = "VPC CIDR Range"
-  type = string
-}
-
-variable "subnet_cidr" {
-  description = "Subnet CIDRS"
-  type = list(string)
-}
 
