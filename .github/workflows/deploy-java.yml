@@ -22,10 +22,6 @@ env :
       TF_VAR_DOCKERHUB_TOKEN : ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
-  build-and-push:
-    if: github.event.inputs.destroy == 'true'
-    runs-on: ubuntu-latest
-    
   deploy:
     if: github.event.inputs.destroy == 'true'
     runs-on: ubuntu-latest
