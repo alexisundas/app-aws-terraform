@@ -1,0 +1,56 @@
+name: Run Docker on EC2
+run-name: ${{ github.actor }} has triggered the pipeline
+
+on:
+  push:
+    tags:
+      - '*'
+
+env :
+  TF_VAR_aws_access_key_id : ${{ secrets.AWS_ACCESS_KEY_ID }}
+  TF_VAR_aws_secret_access_key : ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  TF_VAR_aws_session_token : ${{ secrets.AWS_SESSION_TOKEN }}
+  TF_VAR_private_key_path : ${{ secrets.PRIVATE_KEY_PATH }}
+  TF_VAR_aws_region: ${{ secrets.AWS_REGION }}
+  TF_VAR_DOCKERHUB_USERNAME : ${{ secrets.DOCKERHUB_USERNAME }}
+  TF_VAR_DOCKERHUB_TOKEN : ${{ secrets.DOCKERHUB_TOKEN }}
+  EC2_INSTANCE_IP : ${{ secrets.EC2_INSTANCE_IP }}
+
+jobs:
+  build-and-push:
+    if: github.event.inputs.destroy != 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name : Create SSH Key File
+        run : |
+          echo "${{ secrets.EC2-SSH }}" > private_key.pem
+          chmod 600 private_key.pem
+      
+      -
+        name : SSH into EC2
+
+        run : |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@${{ env.EC2_INSTANCE_IP }} << EOF
+            # Your remote commands here
+            echo "Connected to EC2 instance"
+            # Example: Install Docker
+            sudo yum update -y
+            sudo yum install -y docker
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            timeout 30
+            docker pull spik3r/nginx-app:${{ env.tag }}
+            timeout 20
+            docker run -d --rm --expose 80 spik3r/nginx-app:${{ env.tag }}
+          EOF
+      
+      -
+        name : Clean up SSH Key File
+        if : always()
+        run : rm -f private_key.pem
+
+        
