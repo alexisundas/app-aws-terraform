@@ -1,19 +1,9 @@
-resource "tls_private_key" "ec2-key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
-resource "aws_key_pair" "deployer" {
-  key_name   = "deployer-key"
-  public_key = tls_private_key.ec2-key.public_key_openssh
-}
 resource "aws_instance" "web" {
-  count = length(var.ec2_names)
+  count                  = length(var.ec2_names)
   ami                    = var.ami
   instance_type          = "t2.micro"
   vpc_security_group_ids = [var.security_group]
   subnet_id              = var.subnets[count.index]
-  key_name      = aws_key_pair.deployer.key_name
   tags = {
     Name = var.ec2_names[count.index]
   }
