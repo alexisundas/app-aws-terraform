@@ -5,6 +5,8 @@ on:
   push:
       tags :
         - '*'
+      paths:
+        - "iac"
   workflow_dispatch :
     inputs :
       destroy :
@@ -23,6 +25,10 @@ jobs:
   deploy:
     if: github.event.inputs.destroy == 'false'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./iac
     
     steps:
       - name: Checkout code
