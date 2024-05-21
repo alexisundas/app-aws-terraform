@@ -17,8 +17,4 @@ module "web" {
   security_group = module.security_groups.web_sg_id
   subnet_ids     = module.vpc.subnet_ids
   subnets        = module.vpc.subnet_ids
-  ip_address     = module.web.public_ip
 }
-
-
-variable "ip_address" {}
