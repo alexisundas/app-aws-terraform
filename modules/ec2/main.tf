@@ -1,25 +1,19 @@
-resource "aws_key_pair" "ec2-key" {
-  key_name   = "ec2-key"
-  public_key = file("~/.ssh/id_rsa.pub") // Path to your public key
+resource "tls_private_key" "ec2-key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
-
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = tls_private_key.ec2-key.public_key_openssh
+}
 resource "aws_instance" "web" {
   count = length(var.ec2_names)
   ami                    = var.ami
   instance_type          = "t2.micro"
   vpc_security_group_ids = [var.security_group]
   subnet_id              = var.subnets[count.index]
-  key_name               = aws_key_pair.ec2-key.key_name
-  user_data = <<EOF
-  #!/bin/bash
-    sudo apt-get update -y
-    sudo apt-get install -y docker.io
-    sudo systemctl start docker
-    sudo docker login -u ${var.DOCKERHUB_USERNAME} -p ${var.DOCKERHUB_TOKEN}
-    sudo docker run -d -p 80:80 ${var.DOCKERHUB_USERNAME}/nginx-app:latest
-  EOF
-
+  key_name      = aws_key_pair.deployer.key_name
   tags = {
     Name = var.ec2_names[count.index]
   }
@@ -42,8 +36,5 @@ resource "aws_instance" "web" {
     }
   }
 }
-
-output "public_ip" {
-  value = aws_instance.web.public_ip
-}
 */
+

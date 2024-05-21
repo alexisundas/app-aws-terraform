@@ -24,17 +24,3 @@ variable "ec2_names" {
   type = list(string)
   default = ["WebServer1", "WebServer2"]
 }
-
-variable "DOCKERHUB_USERNAME" {
-  description = "Docker Hub username"
-}
-
-variable "DOCKERHUB_TOKEN" {
-  description = "Docker image tag"
-}
-/*
-variable "private_key_path" {
-    type = string
-    default = "/Home/Users/Alexis/.ssh/testing.pem"
-}
-*/
