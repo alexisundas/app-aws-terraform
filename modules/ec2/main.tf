@@ -1,20 +1,31 @@
 resource "aws_key_pair" "ec2-key" {
   key_name   = "ec2-key"
-  public_key = file("~/.ssh/aws") // Path to your public key
+  public_key = file("~/.ssh/id_rsa.pub") // Path to your public key
 }
 
 
 resource "aws_instance" "web" {
-  ami           = var.ami
-  instance_type = "t2.micro"
-  subnet_id     = var.subnet_id
-  key_name = aws_key_pair.ec2-key.key_name
+  count = length(var.ec2_names)
+  ami                    = var.ami
+  instance_type          = "t2.micro"
+  vpc_security_group_ids = [var.security_group]
+  subnet_id              = var.subnets[count.index]
+  key_name               = aws_key_pair.ec2-key.key_name
+  user_data = <<EOF
+  #!/bin/bash
+    sudo apt-get update -y
+    sudo apt-get install -y docker.io
+    sudo systemctl start docker
+    sudo docker login -u ${var.DOCKERHUB_USERNAME} -p ${var.DOCKERHUB_TOKEN}
+    sudo docker run -d -p 80:80 ${var.DOCKERHUB_USERNAME}/nginx-app:latest
+  EOF
 
   tags = {
-    Name = "web-instance"
+    Name = var.ec2_names[count.index]
   }
+}
 
-  provisioner "remote-exec" {
+/*  provisioner "remote-exec" {
     inline = [
       "sudo apt-get update -y",
       "sudo apt-get install -y docker.io",
@@ -26,7 +37,7 @@ resource "aws_instance" "web" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("~/.ssh/aws-private.pem")
+      private_key = file("~/.ssh/id_rsa.pem")
       host        = self.public_ip
     }
   }
@@ -35,4 +46,4 @@ resource "aws_instance" "web" {
 output "public_ip" {
   value = aws_instance.web.public_ip
 }
-
+*/

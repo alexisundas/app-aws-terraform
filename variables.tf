@@ -1,21 +1,24 @@
-variable "aws_access_key_id" {
-  description = "AWS access key"
-  type        = string
+variable "DOCKERHUB_TOKEN" {
+  description = "Docker Hub Token for authentication"
+
 }
 
-variable "aws_secret_access_key" {
-  description = "AWS secret access key"
-  type        = string
-}
+variable "DOCKERHUB_USERNAME" {
+  description = "Docker Hub Username for authentication"
 
-variable "aws_session_token" {
-  description = "The AWS Session Token"
-  type        = string
 }
 
 variable "aws_region" {
-  description = "The AWS region to create resources in"
-  type        = string
+  type = string
+  default = "eu-central-1"
 }
 
+variable "vpc_cidr" {
+  description = "VPC CIDR Range"
+  type = string
+}
 
+variable "subnet_cidr" {
+  description = "Subnet CIDRS"
+  type = list(string)
+}
