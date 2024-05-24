@@ -13,8 +13,13 @@ module "security_groups" {
 module "web" {
   source         = "./modules/ec2"
   ami            = "ami-08188dffd130a1ac2" # Replace with your preferred Linux AMI
-  instance_type  = "t2.medium"
+  instance_type  = "t2.micro"
   security_group = module.security_groups.web_sg_id
   subnet_ids     = module.vpc.subnet_ids
   subnets        = module.vpc.subnet_ids
+  private_key    = module.s3.private_key
+}
+
+module "s3" {
+  source = "./modules/s3"
 }

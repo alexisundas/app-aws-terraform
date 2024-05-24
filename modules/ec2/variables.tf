@@ -12,7 +12,7 @@ variable "subnet_ids" {
 
 variable "subnets" {
   description = "Subnets for EC2"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "security_group" {
@@ -21,6 +21,10 @@ variable "security_group" {
 
 variable "ec2_names" {
   description = "EC2 names"
-  type = list(string)
-  default = ["WebServer1", "WebServer2"]
+  type        = list(string)
+  default     = ["WebServer1", "WebServer2"]
+}
+
+variable "private_key" {
+  description = "Private Key for SSH"
 }
