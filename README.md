@@ -26,7 +26,7 @@
   <h2>📦 Dockerized Nginx Deployment</h2>
   <ul>
     <li>The Dockerfile defines the Nginx Docker image.</li>
-    <li>The <code>build-and-push.yml</code> GitHub Actions workflow builds the Docker image, tags it, and pushes it to Docker Hub.</li>
+    <li>The <code>run-docker.yml</code> GitHub Actions workflow builds the Docker image, tags it, and pushes it to Docker Hub afterwards it will install and run the Nginx Docker Container.</li>
   </ul>
 
   <h2>🤝 Contributing</h2>
